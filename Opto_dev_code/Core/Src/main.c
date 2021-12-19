@@ -52,8 +52,8 @@ uint8_t message[128];
 
 uint16_t size =0;
 
-uint16_t x =0;
-int dupa = 0;
+uint16_t x =1;
+int dupa = 1;
 
 /* USER CODE END PV */
 
@@ -192,20 +192,37 @@ static void MX_NVIC_Init(void)
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
 
-	sscanf(uart_rx, "%d", &x); // Using sscanf
-
-	if(x = 999){
-		HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_9);
-		size = sprintf(message, "\n\r___________\n\rON/OFF\n");
-		HAL_UART_Transmit(&huart2, (uint8_t*)message, size, 100);
+	if (uart_rx[0] == 101 && uart_rx[1] == 110){
+		if(uart_rx[2] == 49){
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9,SET);
+			size = sprintf(message, "\n\r___________\n\rON\n");
+			HAL_UART_Transmit(&huart2, (uint8_t*)message, size, 100);
+		}
+		else if (uart_rx[2] == 48){
+			HAL_GPIO_WritePin(GPIOA, GPIO_PIN_9,RESET);
+			size = sprintf(message, "\n\r___________\n\rOFF\n");
+			HAL_UART_Transmit(&huart2, (uint8_t*)message, size, 100);
+		}
 	}
 	else{
+
+
+
+	sscanf(uart_rx, "%d", &x); // Using sscanf
+
+	//if(x = 999){
+	//	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_9);
+	//	size = sprintf(message, "\n\r___________\n\rON/OFF\n");
+	//	HAL_UART_Transmit(&huart2, (uint8_t*)message, size, 100);
+	//}
+	//else{
 		if(x > 254){
 			x =254;
 		}
 
 
-		dupa = x*300/254;
+		//dupa = x*300/254 -24;
+		dupa = x +25;
 		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, x);
 
 		size = sprintf(message, "\n\r___________\n\rreceive value: %d \n\rcurrent value: %d mA\n", x,dupa);
