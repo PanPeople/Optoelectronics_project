@@ -53,7 +53,7 @@ uint8_t message[128];
 uint16_t size =0;
 
 uint16_t x =1;
-int dupa = 1;
+int current = 1;
 
 /* USER CODE END PV */
 
@@ -106,33 +106,15 @@ int main(void)
   HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_1);
   HAL_UART_Receive_IT(&huart2, uart_rx, 3);
 
-
-
   size = sprintf(message, "\nSTM32 is running...\n\r");
   HAL_UART_Transmit(&huart2, (uint8_t*)message, size, 100);
-
 
   /* USER CODE END 2 */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-
-
-
-//	  dupa +=10;
-//
-//	  if(dupa>254){
-//		  dupa =10;
-//	  }
-
+  while (1){
 	  HAL_Delay(500);
-
-
-
-
-
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
@@ -205,29 +187,16 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 		}
 	}
 	else{
+	sscanf(uart_rx, "%d", &x);
 
-
-
-	sscanf(uart_rx, "%d", &x); // Using sscanf
-
-	//if(x = 999){
-	//	HAL_GPIO_TogglePin(GPIOA, GPIO_PIN_9);
-	//	size = sprintf(message, "\n\r___________\n\rON/OFF\n");
-	//	HAL_UART_Transmit(&huart2, (uint8_t*)message, size, 100);
-	//}
-	//else{
 		if(x > 254){
 			x =254;
 		}
-
-
-		//dupa = x*300/254 -24;
-		dupa = x +25;
+		current = x +25;
 		__HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_1, x);
 
-		size = sprintf(message, "\n\r___________\n\rreceive value: %d \n\rcurrent value: %d mA\n", x,dupa);
+		size = sprintf(message, "\n\r___________\n\rreceive value: %d \n\rcurrent value: %d mA\n", x,current);
 		HAL_UART_Transmit(&huart2, (uint8_t*)message, size, 100);
-	    //HAL_UART_Transmit(&huart2, uart_rx, 3, 100);
 
 	}
 
