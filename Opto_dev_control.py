@@ -1,7 +1,7 @@
 import serial
 import time
 
-arduino = serial.Serial(port = "COM4", baudrate = 115200)
+arduino = serial.Serial(port = "COM5", baudrate = 115200)
 
 string = ""
 
